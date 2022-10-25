@@ -259,13 +259,13 @@ namespace v2rayN.Forms
             lvServers.Columns.Add("", 30);
             lvServers.Columns.Add(ResUI.LvServiceType, 80);
             lvServers.Columns.Add(ResUI.LvAlias, 100);
-            lvServers.Columns.Add(ResUI.LvAddress, 120);
-            lvServers.Columns.Add(ResUI.LvPort, 100);
-            lvServers.Columns.Add(ResUI.LvEncryptionMethod, 120);
-            lvServers.Columns.Add(ResUI.LvTransportProtocol, 120);
-            lvServers.Columns.Add(ResUI.LvTLS, 100);
-            lvServers.Columns.Add(ResUI.LvSubscription, 100);
-            lvServers.Columns.Add(ResUI.LvTestResults, 120, HorizontalAlignment.Right);
+            lvServers.Columns.Add(ResUI.LvAddress, 30);
+            lvServers.Columns.Add(ResUI.LvPort, 50);
+            lvServers.Columns.Add(ResUI.LvEncryptionMethod, 30);
+            lvServers.Columns.Add(ResUI.LvTransportProtocol, 30);
+            lvServers.Columns.Add(ResUI.LvTLS, 30);
+            lvServers.Columns.Add(ResUI.LvSubscription, 80);
+            lvServers.Columns.Add(ResUI.LvTestResults, 80, HorizontalAlignment.Right);
 
             if (statistics != null && statistics.Enable)
             {
@@ -311,7 +311,7 @@ namespace v2rayN.Forms
                 ListViewItem lvItem = new ListViewItem(def);
                 Utils.AddSubItem(lvItem, EServerColName.configType.ToString(), (item.configType).ToString());
                 Utils.AddSubItem(lvItem, EServerColName.remarks.ToString(), item.remarks);
-                Utils.AddSubItem(lvItem, EServerColName.address.ToString(), item.address);
+                Utils.AddSubItem(lvItem, EServerColName.address.ToString(), "");
                 Utils.AddSubItem(lvItem, EServerColName.port.ToString(), item.port.ToString());
                 Utils.AddSubItem(lvItem, EServerColName.security.ToString(), item.security);
                 Utils.AddSubItem(lvItem, EServerColName.network.ToString(), item.network);
@@ -372,6 +372,7 @@ namespace v2rayN.Forms
             if (lstVmess.Count > config.trayMenuServersLimit)
             {
                 menuServers.DropDownItems.Add(new ToolStripMenuItem(ResUI.TooManyServersTip));
+                menuServers.Visible = false;
                 return;
             }
 
@@ -1135,9 +1136,17 @@ namespace v2rayN.Forms
 
         private void notifyMain_MouseClick(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            var btn = e.Button;
+            if (btn == MouseButtons.Left)
             {
                 ShowForm();
+            }
+            else if (btn == MouseButtons.Middle)
+            {
+                if (config.sysProxyType != ESysProxyType.ForcedChange)
+                    SetListenerType(ESysProxyType.ForcedChange);
+                else
+                    SetListenerType(ESysProxyType.ForcedClear);
             }
         }
 
